@@ -3,4 +3,4 @@ export const metadata = {
   description: "A modern golf operations platform",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode })}
