@@ -21,6 +21,17 @@ export default function RootLayout({
         >
           <a href="/" style={{ marginRight: "1rem" }}>Home</a>
           <a href="/players">Players</a>
+         <nav
+  style={{
+    background: "#f0f0f0",
+    padding: "1rem",
+    borderBottom: "1px solid #ccc",
+  }}
+>
+  <a href="/" style={{ marginRight: "1rem" }}>Home</a>
+  <a href="/players">Players</a>
+  <a href="/events">Events</a>   ← Add this line here
+</nav> 
         </nav>
 
         {/* Page Content */}
