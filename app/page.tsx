@@ -4,4 +4,6 @@ export default function Home() {
       <h1>Hello Gary — the site is working!</h1>
     </main>
   );
+}
+
 
