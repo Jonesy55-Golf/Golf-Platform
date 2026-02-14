@@ -1,6 +1,12 @@
 import { events } from "../eventData";
 
-export default function EventDetailPage({ params }) {
+interface EventDetailPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function EventDetailPage({ params }: EventDetailPageProps) {
   const event = events.find((e) => e.id === params.id);
 
   if (!event) {
