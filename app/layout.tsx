@@ -1,42 +1,26 @@
-export const metadata = {
-  title: "Golf Platform MVP",
-  description: "A modern golf operations platform",
-};
+<body style={{ fontFamily: "sans-serif", margin: 0 }}>
+  <nav style={{ 
+    display: "flex", 
+    gap: "1rem", 
+    padding: "1rem", 
+    background: "#f5f5f5", 
+    borderBottom: "1px solid #ddd",
+    fontFamily: "sans-serif"
+  }}>
+    <a href="/players">Players</a>
+    <a href="/events">Events</a>
+    <a href="/courses">Courses</a>
+    <a href="/scoring">Scoring</a>
+    <a href="/payouts">Payouts</a>
+    <a href="/side-games">Side Games</a>
+    <a href="/season">Season</a>
+    <a href="/rules">Rules</a>
+    <a href="/history">History</a>
+    <a href="/settings">Settings</a>
+    <a href="/director">Director</a>
+  </nav>
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en">
-      <body style={{ fontFamily: "sans-serif", margin: 0 }}>
-        {/* Navigation Bar */}
-        <nav
-          style={{
-            background: "#f0f0f0",
-            padding: "1rem",
-            borderBottom: "1px solid #ccc",
-          }}
-        >
-          <a href="/" style={{ marginRight: "1rem" }}>Home</a>
-          <a href="/players">Players</a>
-         <nav
-  style={{
-    background: "#f0f0f0",
-    padding: "1rem",
-    borderBottom: "1px solid #ccc",
-  }}
->
-  <a href="/" style={{ marginRight: "1rem" }}>Home</a>
-  <a href="/players">Players</a>
-  <a href="/events">Events</a>   ← Add this line here
-</nav> 
-        </nav>
-
-        {/* Page Content */}
-        <main style={{ padding: "2rem" }}>{children}</main>
-      </body>
-    </html>
-  );
-}
+  <main style={{ padding: "2rem" }}>
+    {children}
+  </main>
+</body>
