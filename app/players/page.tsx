@@ -15,6 +15,8 @@ export default function PlayersPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editPlayer, setEditPlayer] = useState({ name: "", ghin: "", index: "" });
 
+  const [recentlyDeleted, setRecentlyDeleted] = useState<any | null>(null);
+
   const addPlayer = () => {
     setPlayers([
       ...players,
@@ -58,12 +60,50 @@ export default function PlayersPage() {
   };
 
   const deletePlayer = (id: number) => {
+    const playerToDelete = players.find((p) => p.id === id);
+    if (!playerToDelete) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${playerToDelete.name}?`
+    );
+    if (!confirmed) return;
+
     setPlayers(players.filter((p) => p.id !== id));
+    setRecentlyDeleted(playerToDelete);
   };
 
   return (
     <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>Players</h1>
+
+      {recentlyDeleted && (
+        <div
+          style={{
+            background: "#ffe8e8",
+            padding: "0.75rem",
+            marginTop: "1rem",
+            border: "1px solid #ffb3b3",
+            borderRadius: "4px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            maxWidth: "500px",
+          }}
+        >
+          <span>
+            Deleted: <strong>{recentlyDeleted.name}</strong>
+          </span>
+          <button
+            onClick={() => {
+              setPlayers([...players, recentlyDeleted]);
+              setRecentlyDeleted(null);
+            }}
+            style={{ padding: "0.3rem 0.75rem", cursor: "pointer" }}
+          >
+            Undo
+          </button>
+        </div>
+      )}
 
       <button
         onClick={() => setShowForm(!showForm)}
@@ -78,25 +118,34 @@ export default function PlayersPage() {
             type="text"
             placeholder="Name"
             value={newPlayer.name}
-            onChange={(e) => setNewPlayer({ ...newPlayer, name: e.target.value })}
+            onChange={(e) =>
+              setNewPlayer({ ...newPlayer, name: e.target.value })
+            }
             style={{ marginRight: "0.5rem", padding: "0.3rem" }}
           />
           <input
             type="text"
             placeholder="GHIN"
             value={newPlayer.ghin}
-            onChange={(e) => setNewPlayer({ ...newPlayer, ghin: e.target.value })}
+            onChange={(e) =>
+              setNewPlayer({ ...newPlayer, ghin: e.target.value })
+            }
             style={{ marginRight: "0.5rem", padding: "0.3rem" }}
           />
           <input
             type="number"
             placeholder="Index"
             value={newPlayer.index}
-            onChange={(e) => setNewPlayer({ ...newPlayer, index: e.target.value })}
+            onChange={(e) =>
+              setNewPlayer({ ...newPlayer, index: e.target.value })
+            }
             style={{ marginRight: "0.5rem", padding: "0.3rem" }}
           />
 
-          <button onClick={addPlayer} style={{ padding: "0.5rem 1rem", cursor: "pointer" }}>
+          <button
+            onClick={addPlayer}
+            style={{ padding: "0.5rem 1rem", cursor: "pointer" }}
+          >
             Save
           </button>
         </div>
@@ -111,10 +160,41 @@ export default function PlayersPage() {
       >
         <thead>
           <tr>
-            <th style={{ borderBottom: "2px solid #ccc", textAlign: "left", padding: "0.5rem" }}>Name</th>
-            <th style={{ borderBottom: "2px solid #ccc", textAlign: "left", padding: "0.5rem" }}>GHIN</th>
-            <th style={{ borderBottom: "2px solid #ccc", textAlign: "left", padding: "0.5rem" }}>Index</th>
-            <th style={{ borderBottom: "2px solid #ccc", padding: "0.5rem" }}>Actions</th>
+            <th
+              style={{
+                borderBottom: "2px solid #ccc",
+                textAlign: "left",
+                padding: "0.5rem",
+              }}
+            >
+              Name
+            </th>
+            <th
+              style={{
+                borderBottom: "2px solid #ccc",
+                textAlign: "left",
+                padding: "0.5rem",
+              }}
+            >
+              GHIN
+            </th>
+            <th
+              style={{
+                borderBottom: "2px solid #ccc",
+                textAlign: "left",
+                padding: "0.5rem",
+              }}
+            >
+              Index
+            </th>
+            <th
+              style={{
+                borderBottom: "2px solid #ccc",
+                padding: "0.5rem",
+              }}
+            >
+              Actions
+            </th>
           </tr>
         </thead>
 
@@ -127,38 +207,81 @@ export default function PlayersPage() {
                     <input
                       type="text"
                       value={editPlayer.name}
-                      onChange={(e) => setEditPlayer({ ...editPlayer, name: e.target.value })}
+                      onChange={(e) =>
+                        setEditPlayer({ ...editPlayer, name: e.target.value })
+                      }
                     />
                   </td>
                   <td style={{ padding: "0.5rem" }}>
                     <input
                       type="text"
                       value={editPlayer.ghin}
-                      onChange={(e) => setEditPlayer({ ...editPlayer, ghin: e.target.value })}
+                      onChange={(e) =>
+                        setEditPlayer({ ...editPlayer, ghin: e.target.value })
+                      }
                     />
                   </td>
                   <td style={{ padding: "0.5rem" }}>
                     <input
                       type="number"
                       value={editPlayer.index}
-                      onChange={(e) => setEditPlayer({ ...editPlayer, index: e.target.value })}
+                      onChange={(e) =>
+                        setEditPlayer({ ...editPlayer, index: e.target.value })
+                      }
                     />
                   </td>
                   <td style={{ padding: "0.5rem" }}>
-                    <button onClick={saveEdit} style={{ marginRight: "0.5rem" }}>Save</button>
+                    <button
+                      onClick={saveEdit}
+                      style={{ marginRight: "0.5rem" }}
+                    >
+                      Save
+                    </button>
                     <button onClick={() => setEditingId(null)}>Cancel</button>
                   </td>
                 </>
               ) : (
                 <>
-                  <td style={{ borderBottom: "1px solid #eee", padding: "0.5rem" }}>{player.name}</td>
-                  <td style={{ borderBottom: "1px solid #eee", padding: "0.5rem" }}>{player.ghin}</td>
-                  <td style={{ borderBottom: "1px solid #eee", padding: "0.5rem" }}>{player.index}</td>
-                  <td style={{ borderBottom: "1px solid #eee", padding: "0.5rem" }}>
-                    <button onClick={() => startEdit(player)} style={{ marginRight: "0.5rem" }}>
+                  <td
+                    style={{
+                      borderBottom: "1px solid #eee",
+                      padding: "0.5rem",
+                    }}
+                  >
+                    {player.name}
+                  </td>
+                  <td
+                    style={{
+                      borderBottom: "1px solid #eee",
+                      padding: "0.5rem",
+                    }}
+                  >
+                    {player.ghin}
+                  </td>
+                  <td
+                    style={{
+                      borderBottom: "1px solid #eee",
+                      padding: "0.5rem",
+                    }}
+                  >
+                    {player.index}
+                  </td>
+                  <td
+                    style={{
+                      borderBottom: "1px solid #eee",
+                      padding: "0.5rem",
+                    }}
+                  >
+                    <button
+                      onClick={() => startEdit(player)}
+                      style={{ marginRight: "0.5rem" }}
+                    >
                       Edit
                     </button>
-                    <button onClick={() => deletePlayer(player.id)} style={{ color: "red" }}>
+                    <button
+                      onClick={() => deletePlayer(player.id)}
+                      style={{ color: "red" }}
+                    >
                       Delete
                     </button>
                   </td>
