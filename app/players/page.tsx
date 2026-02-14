@@ -57,6 +57,10 @@ export default function PlayersPage() {
     setEditPlayer({ name: "", ghin: "", index: "" });
   };
 
+  const deletePlayer = (id: number) => {
+    setPlayers(players.filter((p) => p.id !== id));
+  };
+
   return (
     <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>Players</h1>
@@ -151,7 +155,12 @@ export default function PlayersPage() {
                   <td style={{ borderBottom: "1px solid #eee", padding: "0.5rem" }}>{player.ghin}</td>
                   <td style={{ borderBottom: "1px solid #eee", padding: "0.5rem" }}>{player.index}</td>
                   <td style={{ borderBottom: "1px solid #eee", padding: "0.5rem" }}>
-                    <button onClick={() => startEdit(player)}>Edit</button>
+                    <button onClick={() => startEdit(player)} style={{ marginRight: "0.5rem" }}>
+                      Edit
+                    </button>
+                    <button onClick={() => deletePlayer(player.id)} style={{ color: "red" }}>
+                      Delete
+                    </button>
                   </td>
                 </>
               )}
