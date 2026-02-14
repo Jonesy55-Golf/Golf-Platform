@@ -1,8 +1,8 @@
-export default function PlayersPage() {
+export default function EventsPage() {
   return (
     <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <h1>Players</h1>
-      <p>This is where the player list and player management tools will go.</p>
+      <h1>Events</h1>
+      <p>This is where the event list, event setup tools, and tournament management features will go.</p>
     </main>
   );
 }
