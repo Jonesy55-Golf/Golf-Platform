@@ -1,8 +1,51 @@
 export default function EventsPage() {
+  const events = [
+    { id: "1", name: "Opening Day Scramble", date: "2025-04-12", format: "Scramble", status: "Upcoming" },
+    { id: "2", name: "Member-Member", date: "2025-05-03", format: "Best Ball", status: "Upcoming" },
+  ];
+
   return (
-    <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+    <div style={{ padding: "20px" }}>
       <h1>Events</h1>
-      <p>This is where the event list, event setup tools, and tournament management features will go.</p>
-    </main>
+
+      <button
+        style={{
+          marginTop: "10px",
+          marginBottom: "20px",
+          padding: "10px 15px",
+          cursor: "pointer",
+        }}
+      >
+        Add Event
+      </button>
+
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr>
+            <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>Name</th>
+            <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>Date</th>
+            <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>Format</th>
+            <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>Status</th>
+            <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {events.map((event) => (
+            <tr key={event.id}>
+              <td style={{ padding: "8px" }}>{event.name}</td>
+              <td style={{ padding: "8px" }}>{event.date}</td>
+              <td style={{ padding: "8px" }}>{event.format}</td>
+              <td style={{ padding: "8px" }}>{event.status}</td>
+              <td style={{ padding: "8px" }}>
+                <a href={`/events/${event.id}`} style={{ color: "blue" }}>
+                  View
+                </a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
