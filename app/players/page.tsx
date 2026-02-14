@@ -17,6 +17,36 @@ export default function PlayersPage() {
 
   const [recentlyDeleted, setRecentlyDeleted] = useState<any | null>(null);
 
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: "asc" | "desc" } | null>(null);
+
+  const sortedPlayers = (() => {
+    if (!sortConfig) return players;
+
+    return [...players].sort((a, b) => {
+      const key = sortConfig.key as keyof typeof a;
+
+      let valA = a[key];
+      let valB = b[key];
+
+      if (typeof valA === "string") valA = valA.toLowerCase();
+      if (typeof valB === "string") valB = valB.toLowerCase();
+
+      if (valA < valB) return sortConfig.direction === "asc" ? -1 : 1;
+      if (valA > valB) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    });
+  })();
+
+  const requestSort = (key: string) => {
+    let direction: "asc" | "desc" = "asc";
+
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+
+    setSortConfig({ key, direction });
+  };
+
   const addPlayer = () => {
     setPlayers([
       ...players,
@@ -70,6 +100,11 @@ export default function PlayersPage() {
 
     setPlayers(players.filter((p) => p.id !== id));
     setRecentlyDeleted(playerToDelete);
+  };
+
+  const sortIndicator = (key: string) => {
+    if (!sortConfig || sortConfig.key !== key) return "";
+    return sortConfig.direction === "asc" ? " ▲" : " ▼";
   };
 
   return (
@@ -161,31 +196,37 @@ export default function PlayersPage() {
         <thead>
           <tr>
             <th
+              onClick={() => requestSort("name")}
               style={{
                 borderBottom: "2px solid #ccc",
                 textAlign: "left",
                 padding: "0.5rem",
+                cursor: "pointer",
               }}
             >
-              Name
+              Name{sortIndicator("name")}
             </th>
             <th
+              onClick={() => requestSort("ghin")}
               style={{
                 borderBottom: "2px solid #ccc",
                 textAlign: "left",
                 padding: "0.5rem",
+                cursor: "pointer",
               }}
             >
-              GHIN
+              GHIN{sortIndicator("ghin")}
             </th>
             <th
+              onClick={() => requestSort("index")}
               style={{
                 borderBottom: "2px solid #ccc",
                 textAlign: "left",
                 padding: "0.5rem",
+                cursor: "pointer",
               }}
             >
-              Index
+              Index{sortIndicator("index")}
             </th>
             <th
               style={{
@@ -199,7 +240,7 @@ export default function PlayersPage() {
         </thead>
 
         <tbody>
-          {players.map((player) => (
+          {sortedPlayers.map((player) => (
             <tr key={player.id}>
               {editingId === player.id ? (
                 <>
