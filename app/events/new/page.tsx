@@ -9,7 +9,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { events, saveEvents } from "../eventData";
+import { events, saveEvents } from "../../../lib/eventData";
 
 export default function NewEventPage() {
   const router = useRouter();

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { events } from "./eventData";
+import { events } from "../../lib/eventData";
 
 export default function EventsPage() {
   return (

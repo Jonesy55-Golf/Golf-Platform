@@ -1,4 +1,4 @@
-import { events } from "../eventData";
+import { events } from "../../../lib/eventData";
 
 interface EventDetailPageProps {
   params: {
