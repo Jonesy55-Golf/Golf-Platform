@@ -1,5 +1,12 @@
+// ------------------------------------------------------
+// File: app/events/page.tsx
+// Module: Events
+// Role: Events List Page
+// Notes: Displays all events loaded from server-side JSON
+// ------------------------------------------------------
+
 import Link from "next/link";
-import { events } from "../../lib/eventData";
+import { events } from "@/lib/eventData";
 
 export default function EventsPage() {
   return (
