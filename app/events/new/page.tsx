@@ -1,8 +1,15 @@
+// ------------------------------------------------------
+// File: app/events/new/page.tsx
+// Module: Events
+// Role: Add Event Form
+// Notes: Creates new event and writes to JSON storage
+// ------------------------------------------------------
+
 "use client";
 
 import { useState } from "react";
-import { events } from "../eventData";
 import { useRouter } from "next/navigation";
+import { events, saveEvents } from "../eventData";
 
 export default function NewEventPage() {
   const router = useRouter();
@@ -20,6 +27,7 @@ export default function NewEventPage() {
     };
 
     events.push(newEvent);
+    saveEvents(); // <-- writes to JSON
 
     router.push(`/events/${newEvent.id}`);
   }
@@ -28,58 +36,44 @@ export default function NewEventPage() {
     <div style={{ padding: "20px" }}>
       <h1>Create New Event</h1>
 
-      <div style={{ marginTop: "20px", maxWidth: "400px" }}>
-        <label>
-          Event Name<br />
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
-          />
-        </label>
-
-        <br /><br />
-
-        <label>
-          Date<br />
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
-          />
-        </label>
-
-        <br /><br />
-
-        <label>
-          Format<br />
-          <select
-            value={format}
-            onChange={(e) => setFormat(e.target.value)}
-            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
-          >
-            <option>Scramble</option>
-            <option>Best Ball</option>
-            <option>Stroke Play</option>
-            <option>Shamble</option>
-          </select>
-        </label>
-
-        <br /><br />
-
-        <button
-          onClick={handleSave}
-          style={{
-            padding: "10px 15px",
-            cursor: "pointer",
-            marginTop: "10px"
-          }}
-        >
-          Save Event
-        </button>
+      <div style={{ marginTop: "10px" }}>
+        <label>Name: </label>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          style={{ marginLeft: "10px" }}
+        />
       </div>
+
+      <div style={{ marginTop: "10px" }}>
+        <label>Date: </label>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          style={{ marginLeft: "10px" }}
+        />
+      </div>
+
+      <div style={{ marginTop: "10px" }}>
+        <label>Format: </label>
+        <select
+          value={format}
+          onChange={(e) => setFormat(e.target.value)}
+          style={{ marginLeft: "10px" }}
+        >
+          <option>Scramble</option>
+          <option>Best Ball</option>
+          <option>Stroke Play</option>
+        </select>
+      </div>
+
+      <button
+        onClick={handleSave}
+        style={{ marginTop: "20px", padding: "8px 12px" }}
+      >
+        Save Event
+      </button>
     </div>
   );
 }
