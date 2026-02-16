@@ -1,33 +1,45 @@
-// ------------------------------------------------------
-// File: app/events/new/page.tsx
-// Module: Events
-// Role: Add Event Form
-// Notes: Creates new event and writes to JSON storage
-// ------------------------------------------------------
+/*───────────────────────────────────────────────────────────────
+  File:        app/events/new/page.tsx
+  Module:      Events
+  Role:        Add Event Form
+  Notes:       Saves new event into Zustand store
+  Updated:     2026‑02‑15 15:05 PST
+────────────────────────────────────────────────────────────────*/
 
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { events, saveEvents } from "../../../lib/eventData";
+import { useEventStore } from "../../../store/useEventStore";
 
 export default function NewEventPage() {
   const router = useRouter();
+  const addEvent = useEventStore((state) => state.addEvent);
 
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
   const [format, setFormat] = useState("Scramble");
+
+  /*───────────────────────────────────────────────────────────────
+    Section:     Diagnostic Update — handleSave()
+    Purpose:     Add console.log so we can see exactly what event
+                 data is being saved into the Zustand store
+    Updated:     2026‑02‑15 15:05 PST
+  ────────────────────────────────────────────────────────────────*/
 
   function handleSave() {
     const newEvent = {
       id: Date.now().toString(),
       name,
       date,
+      location,
       format,
     };
 
-    events.push(newEvent);
-    saveEvents(); // <-- writes to JSON
+    console.log("Saving event:", newEvent);
+
+    addEvent(newEvent);
 
     router.push(`/events/${newEvent.id}`);
   }
@@ -39,6 +51,7 @@ export default function NewEventPage() {
       <div style={{ marginTop: "10px" }}>
         <label>Name: </label>
         <input
+          type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           style={{ marginLeft: "10px" }}
@@ -51,6 +64,16 @@ export default function NewEventPage() {
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
+          style={{ marginLeft: "10px" }}
+        />
+      </div>
+
+      <div style={{ marginTop: "10px" }}>
+        <label>Location: </label>
+        <input
+          type="text"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
           style={{ marginLeft: "10px" }}
         />
       </div>
