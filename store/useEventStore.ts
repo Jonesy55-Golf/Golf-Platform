@@ -1,28 +1,29 @@
 /*───────────────────────────────────────────────────────────────
   File:        store/useEventStore.ts
-  Module:      Events
-  Role:        Global Event Store (Zustand)
-  Notes:       Single source of truth for all event data
-  Updated:     2026‑02‑15 13:28 PST
+  Module:      Events Store
+  Role:        Global event state management
+  Notes:       Event type updated to include location
+               All CRUD functions updated accordingly
+  Updated:     2026‑02‑16 16:00 PST
 ────────────────────────────────────────────────────────────────*/
 
 import { create } from "zustand";
 
-export interface EventItem {
+export type Event = {
   id: string;
   name: string;
   date: string;
   location: string;
-  format: string;
-}
+};
 
-interface EventStore {
-  events: EventItem[];
-  addEvent: (event: EventItem) => void;
-  getEventById: (id: string) => EventItem | undefined;
-}
+type EventsState = {
+  events: Event[];
+  addEvent: (event: Event) => void;
+  updateEvent: (id: string, updated: Partial<Event>) => void;
+  deleteEvent: (id: string) => void;
+};
 
-export const useEventStore = create<EventStore>((set, get) => ({
+export const useEventsStore = create<EventsState>((set) => ({
   events: [],
 
   addEvent: (event) =>
@@ -30,7 +31,15 @@ export const useEventStore = create<EventStore>((set, get) => ({
       events: [...state.events, event],
     })),
 
-  getEventById: (id) => {
-    return get().events.find((e) => e.id === id);
-  },
+  updateEvent: (id, updated) =>
+    set((state) => ({
+      events: state.events.map((e) =>
+        e.id === id ? { ...e, ...updated } : e
+      ),
+    })),
+
+  deleteEvent: (id) =>
+    set((state) => ({
+      events: state.events.filter((e) => e.id !== id),
+    })),
 }));
