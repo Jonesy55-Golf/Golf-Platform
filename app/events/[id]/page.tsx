@@ -3,7 +3,8 @@
   Module:      Events
   Role:        Event Detail Page
   Notes:       Displays a single event by ID
-  Updated:     2026‑02‑17 10:50 PST
+  Updated:     2026‑02‑17 12:50 PST
+  Change:      Trigger deploy to sync latest Events module
 ────────────────────────────────────────────────────────────────*/
 
 "use client";
