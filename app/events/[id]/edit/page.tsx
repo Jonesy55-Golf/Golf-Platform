@@ -1,69 +1,121 @@
 /*───────────────────────────────────────────────────────────────
-  File:        app/events/[id]/page.tsx
+  File:        app/events/[id]/edit/page.tsx
   Module:      Events
-  Role:        Event Detail Page
-  Notes:       Displays a single event by ID
-  Updated:     2026‑02‑17 10:50 PST
+  Role:        Edit Event Page
+  Notes:       Allows editing an existing event by ID
+  Updated:     2026‑02‑17 1:00 PST
 ────────────────────────────────────────────────────────────────*/
 
 "use client";
 
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { useEventsStore } from "@/store/useEventStore";
 
-export default function EventDetailPage() {
+export default function EditEventPage() {
   const { id } = useParams();
+  const router = useRouter();
 
   const event = useEventsStore((state) =>
     state.events.find((e) => e.id === id)
   );
 
+  const updateEvent = useEventsStore((state) => state.updateEvent);
+
   //───────────────────────────────────────────────────────────────
-  // Early return BEFORE using event
+  // If event not found, show fallback
   //───────────────────────────────────────────────────────────────
   if (!event) {
     return (
       <div className="p-6 max-w-xl mx-auto">
         <h1 className="text-2xl font-bold mb-4">Event Not Found</h1>
-
-        <Link href="/events" className="text-blue-600 hover:underline">
+        <button
+          onClick={() => router.push("/events")}
+          className="text-blue-600 hover:underline"
+        >
           Back to Events
-        </Link>
+        </button>
       </div>
     );
   }
 
   //───────────────────────────────────────────────────────────────
-  // Safe to use event now
+  // Local state for form fields
+  //───────────────────────────────────────────────────────────────
+  const [name, setName] = useState(event.name);
+  const [date, setDate] = useState(event.date);
+  const [location, setLocation] = useState(event.location);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    updateEvent(id as string, {
+      name,
+      date,
+      location,
+    });
+
+    router.push(`/events/${id}`);
+  }
+
+  //───────────────────────────────────────────────────────────────
+  // Render edit form
   //───────────────────────────────────────────────────────────────
   return (
     <div className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">{event.name}</h1>
+      <h1 className="text-2xl font-bold mb-6">Edit Event</h1>
 
-      <p className="mb-2">
-        <strong>Date:</strong> {event.date}
-      </p>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block font-semibold mb-1">Event Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="border p-2 rounded w-full"
+            required
+          />
+        </div>
 
-      <p className="mb-6">
-        <strong>Location:</strong> {event.location}
-      </p>
+        <div>
+          <label className="block font-semibold mb-1">Date</label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="border p-2 rounded w-full"
+            required
+          />
+        </div>
 
-      <div className="flex gap-4">
-        <Link
-          href={`/events/${event.id}/edit`}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Edit Event
-        </Link>
+        <div>
+          <label className="block font-semibold mb-1">Location</label>
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className="border p-2 rounded w-full"
+            required
+          />
+        </div>
 
-        <Link
-          href="/events"
-          className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300"
-        >
-          Back to Events
-        </Link>
-      </div>
+        <div className="flex gap-4 mt-6">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Save Changes
+          </button>
+
+          <button
+            type="button"
+            onClick={() => router.push(`/events/${id}`)}
+            className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
