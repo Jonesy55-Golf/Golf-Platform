@@ -4,8 +4,9 @@
   File:        app/players/[id]/page.tsx
   Module:      Players
   Role:        Player Detail Page
-  Notes:       Displays a single player's information
-  Updated:     2026‑02‑18 13:55 PST
+  Notes:       Displays a single player's information with
+               navigation to Edit and Player Portal
+  Updated:     2026‑02‑18 14:27 PST
 ────────────────────────────────────────────────────────────────*/
 
 import React from "react";
@@ -23,7 +24,7 @@ export default function PlayerDetailPage({
 }) {
   const router = useRouter();
 
-  // ⭐ Next.js 16: params is a Promise in client components
+  // ⭐ Next.js 16: unwrap params
   const { id } = React.use(params);
 
   const players = usePlayerStore((state) => state.players);
@@ -44,24 +45,31 @@ export default function PlayerDetailPage({
   }
 
   return (
-    <div className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">
+    <div className="p-6 max-w-xl mx-auto space-y-6">
+      <h1 className="text-2xl font-bold">
         {player.firstName} {player.lastName}
       </h1>
 
-      <div className="space-y-3 text-gray-700">
-        <div>
+      <div className="space-y-2 text-gray-700">
+        <p>
           <span className="font-semibold">Handicap Index:</span>{" "}
           {player.handicapIndex || "N/A"}
-        </div>
+        </p>
 
-        <div>
+        <p>
           <span className="font-semibold">Tee Preference:</span>{" "}
           {player.teePreference || "N/A"}
-        </div>
+        </p>
       </div>
 
-      <div className="flex gap-4 mt-8">
+      <div className="flex gap-3 pt-4">
+        <button
+          onClick={() => router.push(`/players/${player.id}/portal`)}
+          className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+        >
+          Player Portal
+        </button>
+
         <button
           onClick={() => router.push(`/players/${player.id}/edit`)}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
