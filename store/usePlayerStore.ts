@@ -4,8 +4,8 @@
   File:        store/usePlayerStore.ts
   Module:      Players
   Role:        Zustand Store for Players
-  Notes:       Handles CRUD operations with string-based IDs
-  Updated:     2026‑02‑18 13:12 PST
+  Notes:       Expanded Player model (email, phone) for Portal use.
+  Updated:     2026‑02‑19 13:12 PST
 ────────────────────────────────────────────────────────────────*/
 
 import { create } from "zustand";
@@ -16,6 +16,8 @@ export interface Player {
   lastName: string;
   handicapIndex?: string;
   teePreference?: string;
+  email?: string;
+  phone?: string;
 }
 
 interface PlayerStore {

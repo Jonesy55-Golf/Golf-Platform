@@ -1,12 +1,12 @@
 /*───────────────────────────────────────────────────────────────
   File:        tailwind.config.js
-  Module:      Tailwind CSS Configuration
-  Role:        Defines scan paths and theme extensions
-  Notes:       Enables Tailwind in the app/ directory
-               Required for gap‑4 and other utilities to work
-  Updated:     2026‑02‑16 16:38 PST
+  Purpose:     Tailwind configuration for the Golf Platform
+  Restored:    2026-02-19
+  Notes:       Clean restore after accidental deletion. Standard
+               content paths included for app, components, store.
 ────────────────────────────────────────────────────────────────*/
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",

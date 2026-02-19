@@ -1,45 +1,53 @@
+"use client";
+
 /*───────────────────────────────────────────────────────────────
   File:        store/useEventStore.ts
-  Module:      Events Store
-  Role:        Global event state management
-  Notes:       Event type updated to include location
-               All CRUD functions updated accordingly
-  Updated:     2026‑02‑16 16:00 PST
+  Module:      Events
+  Role:        Zustand Store for Events
+  Updated:     2026‑02‑19
 ────────────────────────────────────────────────────────────────*/
 
 import { create } from "zustand";
 
-export type Event = {
+export interface Event {
   id: string;
   name: string;
   date: string;
-  location: string;
-};
+  format?: string;
+  course?: string;
+  notes?: string;
+}
 
-type EventsState = {
+interface EventStore {
   events: Event[];
-  addEvent: (event: Event) => void;
-  updateEvent: (id: string, updated: Partial<Event>) => void;
+  addEvent: (data: Omit<Event, "id">) => void;
+  updateEvent: (id: string, data: Partial<Event>) => void;
   deleteEvent: (id: string) => void;
-};
+}
 
-export const useEventsStore = create<EventsState>((set) => ({
+export const useEventStore = create<EventStore>((set) => ({
   events: [],
 
-  addEvent: (event) =>
-    set((state) => ({
-      events: [...state.events, event],
+  addEvent: (data) =>
+    set((state: EventStore) => ({
+      events: [
+        ...state.events,
+        {
+          id: crypto.randomUUID(),
+          ...data,
+        },
+      ],
     })),
 
-  updateEvent: (id, updated) =>
-    set((state) => ({
-      events: state.events.map((e) =>
-        e.id === id ? { ...e, ...updated } : e
+  updateEvent: (id, data) =>
+    set((state: EventStore) => ({
+      events: state.events.map((event: Event) =>
+        event.id === id ? { ...event, ...data } : event
       ),
     })),
 
   deleteEvent: (id) =>
-    set((state) => ({
-      events: state.events.filter((e) => e.id !== id),
+    set((state: EventStore) => ({
+      events: state.events.filter((event: Event) => event.id !== id),
     })),
 }));
