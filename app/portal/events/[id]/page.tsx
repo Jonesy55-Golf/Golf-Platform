@@ -1,92 +1,81 @@
 /*───────────────────────────────────────────────────────────────
   File:        app/portal/events/[id]/page.tsx
-  Module:      Events
-  Role:        Event Detail Page
-  Notes:       Displays a single event by ID
-  Updated:     2026‑02‑19
+  Module:      Portal Events
+  Role:        Edit Event Page
+  Notes:       Loads event by ID, reuses EventForm, and updates
+               the event before redirecting back to Events list.
+  Updated:     2026‑02‑20 06:45 PST
 ────────────────────────────────────────────────────────────────*/
 
 "use client";
 
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEventStore } from "@/store/useEventStore";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import EventForm from "@/app/components/EventForm";
 
-export default function EventDetailPage() {
-  const { id } = useParams();
+export default function EditEventPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const router = useRouter();
+  const { id } = params;
 
-  const event = useEventStore((state) =>
-    state.events.find((e) => String(e.id) === String(id))
-  );
+  const [eventData, setEventData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!event) {
-    return (
-      <div className="p-6 max-w-xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Event Not Found</h1>
+  //───────────────────────────────────────────────
+  // Load event by ID
+  //───────────────────────────────────────────────
+  useEffect(() => {
+    async function fetchEvent() {
+      try {
+        const res = await fetch(`/api/events/${id}`);
+        if (!res.ok) throw new Error("Failed to load event");
 
-        <Link href="/portal/events" className="text-blue-600 hover:underline">
-          Back to Events
-        </Link>
-      </div>
-    );
+        const data = await res.json();
+        setEventData(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchEvent();
+  }, [id]);
+
+  //───────────────────────────────────────────────
+  // Handle update
+  //───────────────────────────────────────────────
+  async function handleUpdate(updatedEvent: any) {
+    try {
+      const res = await fetch(`/api/events/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedEvent),
+      });
+
+      if (!res.ok) throw new Error("Failed to update event");
+
+      router.push("/portal/events");
+    } catch (err) {
+      console.error(err);
+    }
   }
 
+  //───────────────────────────────────────────────
+  // Render
+  //───────────────────────────────────────────────
+  if (loading) return <div>Loading event...</div>;
+  if (!eventData) return <div>Event not found.</div>;
+
   return (
-    <div className="p-6 max-w-xl mx-auto">
-
-      {/* Header */}
-      <div className="section-header">
-        <h1 className="section-title">{event.name}</h1>
-      </div>
-
-      <p className="section-subtitle">Event Details</p>
-
+    <div className="max-w-2xl mx-auto">
+      <h1 className="section-header">Edit Event</h1>
       <div className="section-divider" />
 
-      {/* Details */}
-      <div className="space-y-3 mb-6">
-        <p>
-          <strong>Date:</strong> {event.date}
-        </p>
-
-        <p>
-          <strong>Format:</strong> {event.format || "—"}
-        </p>
-
-        <p>
-          <strong>Course:</strong> {event.course || "—"}
-        </p>
-
-        {event.notes && (
-          <p>
-            <strong>Notes:</strong> {event.notes}
-          </p>
-        )}
-      </div>
-
-      {/* Actions */}
-      <div className="flex gap-4">
-        <Link
-          href={`/portal/events/${event.id}/edit`}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Edit Event
-        </Link>
-
-        <Link
-          href={`/portal/events/${event.id}/delete`}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-        >
-          Delete Event
-        </Link>
-
-        <Link
-          href="/portal/events"
-          className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300"
-        >
-          Back to Events
-        </Link>
-      </div>
+      <EventForm initialData={eventData} onSubmit={handleUpdate} />
     </div>
   );
 }

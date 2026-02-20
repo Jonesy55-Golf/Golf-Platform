@@ -2,10 +2,10 @@
   File:        app/components/EventForm.tsx
   Module:      Events
   Role:        Shared Event Form Component
-  Notes:       Used by Create + Edit pages
-               Typing corrected for TS strict mode
-               No store import needed
-  Updated:     2026‑02‑16 08:15 PST
+  Notes:       Unified Create + Edit form
+               Accepts optional initialData
+               Matches Players module architecture
+  Updated:     2026‑02‑20 06:55 PST
 ────────────────────────────────────────────────────────────────*/
 
 "use client";
@@ -13,21 +13,16 @@
 import React from "react";
 
 interface EventFormProps {
-  initialValues: {
+  initialData?: {
     name: string;
     date: string;
   };
-  submitLabel: string;
   onSubmit: (values: { name: string; date: string }) => void;
 }
 
-export default function EventForm({
-  initialValues,
-  submitLabel,
-  onSubmit,
-}: EventFormProps) {
-  const [name, setName] = React.useState<string>(initialValues.name);
-  const [date, setDate] = React.useState<string>(initialValues.date);
+export default function EventForm({ initialData, onSubmit }: EventFormProps) {
+  const [name, setName] = React.useState<string>(initialData?.name || "");
+  const [date, setDate] = React.useState<string>(initialData?.date || "");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,7 +64,7 @@ export default function EventForm({
         type="submit"
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
       >
-        {submitLabel}
+        Save Event
       </button>
     </form>
   );
