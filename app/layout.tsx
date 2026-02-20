@@ -25,7 +25,7 @@ export default function RootLayout({
         <nav className="w-full bg-gray-900 text-white px-6 py-4 flex gap-6">
           <a href="/" className="hover:text-gray-300">Home</a>
           <a href="/players" className="hover:text-gray-300">Players</a>
-          <a href="/events" className="hover:text-gray-300">Events</a>
+          <a href="/portal/events" className="hover:text-gray-300">Events</a>
           <a href="/rules" className="hover:text-gray-300">Rules</a>
         </nav>
 
