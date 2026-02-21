@@ -1,17 +1,51 @@
 /*───────────────────────────────────────────────────────────────
-  File:        data/eventData.ts
+  File:        app/data/eventData.ts
   Module:      Events
-  Role:        Event type definition and in‑memory event store
-  Notes:       Temporary data layer until persistent storage added
-  Updated:     2026‑02‑15 12:21 PST
+  Role:        File‑based data layer for Events
+  Notes:       Automatically switches between test/prod JSON files
+               Provides read/write helpers for API routes
+  Updated:     2026‑02‑20 04:35 PST
 ────────────────────────────────────────────────────────────────*/
+
+import { promises as fs } from "fs";
+import path from "path";
 
 export interface Event {
   id: string;
   name: string;
   date: string;
   location: string;
-  format: string;     // Added to match the rest of the system
+  format: string;
 }
 
-export const events: Event[] = [];
+//───────────────────────────────────────────────────────────────
+// Select correct JSON file based on environment
+//───────────────────────────────────────────────────────────────
+const isProd = process.env.NODE_ENV === "production";
+
+const dataFile = isProd
+  ? path.join(process.cwd(), "app/data/events.prod.json")
+  : path.join(process.cwd(), "app/data/events.test.json");
+
+//───────────────────────────────────────────────────────────────
+// Read all events
+//───────────────────────────────────────────────────────────────
+export async function readEvents(): Promise<Event[]> {
+  const file = await fs.readFile(dataFile, "utf-8");
+  return JSON.parse(file);
+}
+
+//───────────────────────────────────────────────────────────────
+// Write all events
+//───────────────────────────────────────────────────────────────
+export async function writeEvents(events: Event[]): Promise<void> {
+  await fs.writeFile(dataFile, JSON.stringify(events, null, 2), "utf-8");
+}
+
+//───────────────────────────────────────────────────────────────
+// Helper: Get one event by ID
+//───────────────────────────────────────────────────────────────
+export async function getEventById(id: string): Promise<Event | undefined> {
+  const events = await readEvents();
+  return events.find((e) => e.id === id);
+}
