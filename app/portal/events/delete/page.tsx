@@ -1,13 +1,13 @@
-/*───────────────────────────────────────────────────────────────
+"use client";
+
+/*----------------------------------------------------------------
   File:        app/portal/events/delete/page.tsx
   Module:      Portal Events
   Role:        Delete Event Confirmation Page
   Notes:       Loads event by ID, confirms deletion, and redirects
                back to Events list after successful delete.
-  Updated:     2026‑02‑20 06:58 PST
-────────────────────────────────────────────────────────────────*/
-
-"use client";
+  Updated:     2026-02-20 06:58 PST
+----------------------------------------------------------------*/
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,9 +20,6 @@ export default function DeleteEventPage() {
   const [eventData, setEventData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  //───────────────────────────────────────────────
-  // Load event by ID
-  //───────────────────────────────────────────────
   useEffect(() => {
     if (!id) return;
 
@@ -43,9 +40,6 @@ export default function DeleteEventPage() {
     fetchEvent();
   }, [id]);
 
-  //───────────────────────────────────────────────
-  // Handle delete
-  //───────────────────────────────────────────────
   async function handleDelete() {
     try {
       const res = await fetch(`/api/events/${id}`, {
@@ -60,9 +54,6 @@ export default function DeleteEventPage() {
     }
   }
 
-  //───────────────────────────────────────────────
-  // Render
-  //───────────────────────────────────────────────
   if (!id) return <div>Missing event ID.</div>;
   if (loading) return <div>Loading event...</div>;
   if (!eventData) return <div>Event not found.</div>;
