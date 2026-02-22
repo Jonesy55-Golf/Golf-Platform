@@ -6,7 +6,7 @@
   Role:        Delete Event Confirmation Page
   Notes:       Loads event by ID, confirms deletion, and redirects
                back to Events list after successful delete.
-  Updated:     2026‑02‑21 16:37 PST
+  Updated:     2026‑02‑21 17:37 PST
 ----------------------------------------------------------------*/
 
 import { useRouter, useSearchParams } from "next/navigation";
